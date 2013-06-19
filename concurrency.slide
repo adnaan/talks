@@ -5,4 +5,10 @@ Bangalore
 Author: Adnaan Badr
 badr.adnaan@gmail.com
 
-* What is Concurrency?
+* Go Routines
+
+Concurrent threads of execution
+
+* Channels
+
+A primitive which provides the synchronization mechanism.
