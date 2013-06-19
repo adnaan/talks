@@ -16,7 +16,6 @@ func gopher(msg string) <-chan string { // returns a receive only channel
 			time.Sleep(time.Duration(rand.Intn(1e3)) * time.Millisecond)
 		}
 	}() //call the function!
-
 	return c
 }
 

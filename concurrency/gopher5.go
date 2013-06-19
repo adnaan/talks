@@ -16,8 +16,7 @@ func first(input1, input2 <-chan string) <-chan string {
 		for {
 			c <- <-input2
 		}
-	}()
-	//the value sent to c is either <-input1 or <-input2 depending upon who receives first
+	}() //the value sent to c is either <-input1 or <-input2 depending upon who receives first
 	return c
 }
 
