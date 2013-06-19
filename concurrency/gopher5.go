@@ -31,7 +31,6 @@ func gopher(msg string) <-chan string {
 			c <- fmt.Sprintf("%s %d", msg, i)
 		}
 	}()
-
 	return c
 }
 
