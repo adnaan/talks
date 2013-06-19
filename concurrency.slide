@@ -6,6 +6,7 @@ Adnaan Badr
 badr.adnaan@gmail.com
 https://github.com/adnaan/talks
 Reference:http://talks.golang.org/2012/concurrency.slide
+Share Memory by Communicating: https://coderwall.com/p/rklk_a
 
 * Goroutines
 
@@ -27,7 +28,7 @@ If it did, it would have not exited before letting *func* *gopher* finish it's w
 
 Talk about communication problems!
 
-Statement: If they can communicate, they can synchronize.
+- Statement: If they can communicate, they can synchronize.
 
 * Channels
 
@@ -61,6 +62,8 @@ We sent a channel to *func* *gopher* for communication. How about getting back a
 
 .code concurrency/gopher3.go /GOPHER OMIT/,/ENDGOPHER OMIT/
 
+* Let's play some more!
+
 .play concurrency/gopher3.go /MAIN OMIT/,/ENDMAIN OMIT/
 
 * Same function, Many instances == Services!!
@@ -71,21 +74,34 @@ We sent a channel to *func* *gopher* for communication. How about getting back a
 
 * Whoever talks first!
 
-The *gopher* instances are executing one after the other. Let's print whoever responds first.
+The *gopher* instances are executing one after the other. Let's print whoever responds first. We need a mulitplexer.
 
 .code concurrency/gopher5.go /FIRST OMIT/,/ENDFIRST OMIT/
-
-.code concurrency/gopher5.go /GOPHER OMIT/,/ENDGOPHER OMIT/
 
 * Whoever talks first!
 
 Now the gopher instance who responds first will print
 
+.code concurrency/gopher5.go /GOPHER OMIT/,/ENDGOPHER OMIT/
+
 .play concurrency/gopher5.go /MAIN OMIT/,/ENDMAIN OMIT/
 
 * Restore order
 
-The messages are not in sequence. 
+The messages are not in sequence. Let's bring back the order! Instead of a string we pass a struct message.
+
+.code concurrency/gopher6.go /MSG OMIT/,/ENDMSG OMIT/
+
+*Message* contains the string message and a wait channel which is a signal for
+*gopher* to reply or not.
+
+.code concurrency/gopher6.go /FIRST OMIT/,/ENDFIRST OMIT/
+
+* Restore order
+
+We send *true* on wait channel of the message to indicate that the relevant gopher should reply.
+
+.play concurrency/gopher6.go /MAIN OMIT/,/ENDMAIN OMIT/
 
 * More in the future!
 
@@ -96,6 +112,10 @@ The messages are not in sequence.
 * Conclusion
 
 - Concurrency in Go is simple.
+
+- Share memory by communicating.
+
+- Do not communicate by sharing memory.
 
 
 
