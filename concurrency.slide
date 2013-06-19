@@ -9,6 +9,8 @@ badr.adnaan@gmail.com
 
 Concurrently executing function launched by the *go* statement
 
+.play concurrency/gopher.go
+
 * Channels
 
 A primitive which provides the synchronization mechanism
