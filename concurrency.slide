@@ -4,6 +4,7 @@ Go Meetup #1 Bangalore
 
 Adnaan Badr
 badr.adnaan@gmail.com
+https://github.com/adnaan
 
 * Goroutines
 
@@ -13,19 +14,19 @@ Concurrently executing function launched by the *go* statement.
 
 * Making it work
 
-Do something in *main* goroutine to stop it from dying before func gopher executes.
+Do something in *main* goroutine to stop it from dying before *func gopher* executes.
 
 .play concurrency/gopher1.go /START OMIT/,/END OMIT/
 
 * Synchronization
 
-As we saw func main didn't know what func gopher was doing. 
+As we saw *func main* didn't know what *func gopher* was doing. 
 
-If it did, it would have not exited before letting func gopher finish it's work.
+If it did, it would have not exited before letting *func gopher* finish it's work.
 
 Talk about communication problems!
 
-If they can communicate, they can synchronize.
+Statement: If they can communicate, they can synchronize.
 
 * Channels
 
@@ -39,11 +40,28 @@ Channels to the rescue! They are way to provide communication between two gorout
 
 * Channels and Goroutines
 
-Let's add a channel to the mix!
+Add a channel to the mix!
 
 .code concurrency/gopher2.go /GOPHER OMIT/,/ENDGOPHER OMIT/
 
 .play concurrency/gopher2.go /MAIN OMIT/,/ENDMAIN OMIT/
+
+* Takeaways
+
+A channel blocks until both sender(c<-) and receiver(<-c) are ready to do their jobs.
+
+"Block" means no communication takes place through the channel. In *func main* the execution of next program instruction is dependant on the receiving of a channel message:*fmt.Printf("Gopher says: %q\n", <-c)* , only executes if a message is received(or it wait's indefinitely).
+
+Hence, the sending and receving of messages also synchronizes *func main* and *func gopher*
+
+* Let's play some more!
+
+We sent a channel to *func gopher* for communication. How about getting back a channel from it?
+
+.code concurrency/gopher3.go /GOPHER OMIT/,/ENDGOPHER OMIT/
+
+.play concurrency/gopher3.go /MAIN OMIT/,/ENDMAIN OMIT/
+
 
 
 
