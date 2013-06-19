@@ -31,11 +31,11 @@ If they can communicate, they can synchronize.
 
 Channels to the rescue! They are way to provide communication between two goroutines.
 
-.code concurrency/channel.go /INIT OMIT/,/ENDINIT OMIT/
+.code concurrency/channels.go /INIT OMIT/,/ENDINIT OMIT/
 
-.code concurrency/channel.go /SEND OMIT/,/ENDSEND OMIT/
+.code concurrency/channels.go /SEND OMIT/,/ENDSEND OMIT/
 
-.code concurrency/channel.go /REC OMIT/,/ENDREC OMIT/
+.code concurrency/channels.go /REC OMIT/,/ENDREC OMIT/
 
 * Channels and Goroutines
 
