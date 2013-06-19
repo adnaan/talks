@@ -12,6 +12,9 @@ Concurrently executing function launched by the *go* statement
 .play concurrency/gopher.go
 
 * Making it work
+
+Do something in *main* goroutine to stop it from dying before func gopher executes
+
 .play concurrency/gopher1.go
 
 * Channels
