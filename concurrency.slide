@@ -1,15 +1,15 @@
 Concurrency in Go
 Go Meetup Bangalore #1
 22 June 2013
-Tags: concurrency, meetup, bangalore
+Tags: concurrency, meetup
 
 Author: Adnaan Badr
 badr.adnaan@gmail.com
 
-* Go Routines
+* Goroutines
 
-Concurrent threads of execution
+Concurrently executing function launched by the *go* statement
 
 * Channels
 
-A primitive which provides the synchronization mechanism.
+A primitive which provides the synchronization mechanism
