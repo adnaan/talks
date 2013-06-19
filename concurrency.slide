@@ -4,7 +4,6 @@ Concurrency in Go
 Adnaan Badr
 badr.adnaan@gmail.com
 
-
 * Goroutines
 
 Concurrently executing function launched by the *go* statement
