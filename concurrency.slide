@@ -41,9 +41,11 @@ Channels to the rescue! They are way to provide communication between two gorout
 
 Let's add a channel to the mix!
 
-.code concurrency/gopher2.go /MAIN OMIT/,/ENDMAIN OMIT/
+.code concurrency/gopher2.go /GOPHER OMIT/,/ENDGOPHER OMIT/
 
-.play concurrency/gopher2.go /GOPHER OMIT/,/ENDGOPHER OMIT/
+.play concurrency/gopher2.go /MAIN OMIT/,/ENDMAIN OMIT/
+
+
 
 
 
