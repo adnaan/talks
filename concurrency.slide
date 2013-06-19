@@ -17,6 +17,24 @@ Do something in *main* goroutine to stop it from dying before func gopher execut
 
 .play concurrency/gopher1.go
 
+* Synchronization
+
+As we saw func main didn't know what func gopher was doing. 
+
+If it did, it would have not exited before letting func gopher finish it's work.
+
+Talk about communication problems!
+
+If they can communicate, they can synchronize.
+
 * Channels
 
-A primitive which provides the synchronization mechanism.
+Channels to the rescue! They are way to provide communication between two goroutines.
+
+.code concurrency/channel.go /INIT OMIT/,/ENDINIT OMIT/
+
+.code concurrency/channel.go /SEND OMIT/,/ENDSEND OMIT/
+
+.code concurrency/channel.go /REC OMIT/,/ENDREC OMIT/
+
+
