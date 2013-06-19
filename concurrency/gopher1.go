@@ -13,9 +13,12 @@ func gopher(msg string) {
 	}
 }
 
+//START OMIT
 func main() {
 	go gopher("I am Gopher")
 	fmt.Println("Hello Gopher!")
 	time.Sleep(2 * time.Second)
 	fmt.Println("Bye Gopher!")
 }
+
+//END OMIT

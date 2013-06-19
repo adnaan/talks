@@ -15,7 +15,7 @@ Concurrently executing function launched by the *go* statement.
 
 Do something in *main* goroutine to stop it from dying before func gopher executes.
 
-.play concurrency/gopher1.go
+.play concurrency/gopher1.go /START OMIT/,/END OMIT/
 
 * Synchronization
 
@@ -36,5 +36,10 @@ Channels to the rescue! They are way to provide communication between two gorout
 .code concurrency/channel.go /SEND OMIT/,/ENDSEND OMIT/
 
 .code concurrency/channel.go /REC OMIT/,/ENDREC OMIT/
+
+* Channels and Goroutines
+
+Let's add a channel to the mix!
+
 
 
