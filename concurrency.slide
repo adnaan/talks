@@ -11,6 +11,9 @@ Concurrently executing function launched by the *go* statement
 
 .play concurrency/gopher.go
 
+* Making it work
+.play concurrency/gopher1.go
+
 * Channels
 
 A primitive which provides the synchronization mechanism
