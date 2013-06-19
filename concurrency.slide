@@ -4,7 +4,8 @@ Go Meetup #1 Bangalore
 
 Adnaan Badr
 badr.adnaan@gmail.com
-https://github.com/adnaan
+https://github.com/adnaan/talks
+Reference:http://talks.golang.org/2012/concurrency.slide
 
 * Goroutines
 
@@ -14,7 +15,7 @@ Concurrently executing function launched by the *go* statement.
 
 * Making it work
 
-Do something in *main* goroutine to stop it from dying before *func gopher* executes.
+Do something in *main* goroutine to stop it from dying before *func* *gopher* executes
 
 .play concurrency/gopher1.go /START OMIT/,/END OMIT/
 
@@ -30,7 +31,7 @@ Statement: If they can communicate, they can synchronize.
 
 * Channels
 
-Channels to the rescue! They are way to provide communication between two goroutines.
+Channels to the rescue! They are a way to provide communication between two goroutines.
 
 .code concurrency/channels.go /INIT OMIT/,/ENDINIT OMIT/
 
@@ -61,6 +62,46 @@ We sent a channel to *func* *gopher* for communication. How about getting back a
 .code concurrency/gopher3.go /GOPHER OMIT/,/ENDGOPHER OMIT/
 
 .play concurrency/gopher3.go /MAIN OMIT/,/ENDMAIN OMIT/
+
+* Same function, Many instances == Services!!
+
+.code concurrency/gopher4.go /GOPHER OMIT/,/ENDGOPHER OMIT/
+
+.play concurrency/gopher4.go /MAIN OMIT/,/ENDMAIN OMIT/
+
+* Whoever talks first!
+
+The *gopher* instances are executing one after the other. Let's print whoever responds first.
+
+.code concurrency/gopher5.go /FIRST OMIT/,/ENDFIRST OMIT/
+
+.code concurrency/gopher5.go /GOPHER OMIT/,/ENDGOPHER OMIT/
+
+* Whoever talks first!
+
+Now the gopher instance who responds first will print
+
+.play concurrency/gopher5.go /MAIN OMIT/,/ENDMAIN OMIT/
+
+* Restore order
+
+The messages are not in sequence. 
+
+* More in the future!
+
+- Buffered channels
+
+- Select
+
+* Conclusion
+
+- Concurrency in Go is simple.
+
+
+
+
+
+
 
 
 
