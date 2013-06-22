@@ -107,6 +107,8 @@ We send *true* on wait channel of the message to indicate that the relevant goph
 
 - Buffered channels
 
+- Close
+
 - Select
 
 * Conclusion
