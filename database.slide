@@ -1,0 +1,142 @@
+Databases
+Go Meetup #2 Bangalore 
+17 Aug 2013
+
+Adnaan Badr
+badr.adnaan@gmail.com
+https://github.com/adnaan/talks
+http://golang.org/pkg/database/sql/
+https://code.google.com/p/go-wiki/wiki/SQLDrivers
+http://golang.org/src/pkg/database/sql/doc.txt
+
+* database/sql
+
+- Package sql provides a generic interface around SQL (or SQL-like) databases.
+
+- Types: DB, Row, Scanner, Stmt, Tx
+
+- DB is safe for concurrent use by multiple goroutines.
+
+- Sql manages the connections. Also maintains a free pool of idle connections.
+
+- Transactions: Tx, Begin, Commit, Rollback
+
+* Driver Design
+
+- Reference database/sql. Don't use driver package directly to maintain independence. 
+
+- Care only about common cases. Avoid db-specific extensions.
+
+- Separate, driver implementations and helper methods.
+
+- Consistent type casting between drivers.
+
+- Handle concurrency. User's shouldn't need to care about thread safety, pool management.
+
+* Usage
+
+.code database/usage.go /INIT OMIT/,/ENDINIT OMIT/
+
+* Access
+
+.code database/access/access.go /INIT OMIT/,/ENDINIT OMIT/
+
+- sql.DB is not a database connection. It opens and closes connections. Manages a pool of connections.
+
+.code database/ping/ping.go /INIT OMIT/,/ENDINIT OMIT/
+
+* Prepare
+
+Let's Prepare a statement and modify some data.
+
+.code database/insert/insert.go /INIT OMIT/,/ENDINIT OMIT/
+
+* Query
+
+.code database/query/query.go /INIT OMIT/,/ENDINIT OMIT/
+
+* Single Row
+
+.code database/caveats/query_caveats.go /SINGLEINIT OMIT/,/SINGLEEND OMIT/
+
+* Caveats
+
+Handling Nullable Columns.
+
+.code database/caveats/query_caveats.go /NULLINIT OMIT/,/NULLEND OMIT/
+
+* Caveats
+
+Variable number of columns.
+
+.code database/caveats/query_caveats.go /COLINIT OMIT/,/COLEND OMIT/
+
+* Caveats
+
+Queries with no results.
+
+.code database/caveats/query_caveats.go /RESINIT OMIT/,/RESEND OMIT/
+
+* Gotchas and Limitations
+
+- Remember to rows.close(), db.close() or you can run out of resources.
+
+- Don't use db.Query(...) for statements which don't return results.
+
+- No control over pool of connections.
+
+- Big unsigned integers not supported.
+
+- Handling nulls is fault prone.
+
+* PostgreSQL
+
+.link https://github.com/lib/pq pq driver
+
+* Redis
+
+.link https://github.com/garyburd/redigo Redigo
+
+.code database/redis/redis.go /INIT OMIT/,/ENDINIT OMIT/
+
+* MongoDB
+
+.link http://labix.org/mgo mgo
+
+Example.
+
+.code database/mongo/mongo.go /TYPEINIT OMIT/,/TYPEEND OMIT/
+
+* MongoDB Example
+
+Get a session.
+
+.code database/mongo/mongo.go /SESSIONINIT OMIT/,/SESSIONEND OMIT/
+
+* MongoDB Example
+
+Insert and Find.
+
+.code database/mongo/mongo.go /MINIT OMIT/,/MEND OMIT/
+
+* Workshop: REST API Application with MongoDB
+
+.link https://github.com/lokyantra/api Lokyantra
+
+- An API for democracy. Happy Independence Day!
+
+- First feature is to implement a polls api.
+
+- Create question with options. Vote on question/option with REST API.
+
+- No frontend right now.
+
+- MIT License. Contributions are welcome.
+
+
+
+
+
+
+
+
