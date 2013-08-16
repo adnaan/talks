@@ -1,0 +1,146 @@
+Workshop: A REST API Application with MongoDB
+Go Meetup #2 Bangalore 
+17 Aug 2013
+
+Adnaan Badr
+badr.adnaan@gmail.com
+https://github.com/adnaan/talks
+https://github.com/lokyantra/api
+
+* Lokyantra
+
+- An API for democracy. Happy Independence Day!
+
+- First feature is to implement a polls api.
+
+- Create question with options. Vote on question/option with REST API.
+
+- It's a work in progress. Has MIT License. Contributions and Ideas are welcome.
+
+- Today we will create a subset of it.
+
+* Polls API
+
+- POST /api/q/
+
+- PUT /api/q/:id
+
+- GET /api/q/:id
+
+- DELETE /api/q/:id
+
+* Question
+
+Model
+
+.code polls/model.go /TYPEINIT OMIT/,/TYPEEND OMIT/
+
+* Question
+
+POST /api/q/ > {
+    "text": "Which is the best IPL team?",
+    "options": [
+        {
+            "option_id": "1",
+            "name": "RCB"
+        },
+        {
+            "option_id": "2",
+            "name": "KKR"
+        },
+        {
+            "option_id": "3",
+            "name": "CSK"
+        },
+        {
+            "option_id": "4",
+            "name": "MI"
+        }
+    ]
+}
+
+* Server
+
+.code polls/server.go /TYPEINIT OMIT/,/TYPEEND OMIT/
+
+* Server
+
+Create a New Server
+
+.code polls/server.go /NEWINIT OMIT/,/NEWEND OMIT/
+
+*Server
+
+Start and Listen
+
+.code polls/server.go /LINIT OMIT/,/LEND OMIT/
+
+* Server
+
+Stop
+
+.code polls/server.go /SINIT OMIT/,/SEND OMIT/
+
+* Handlers
+
+Route Setup
+
+.code polls/server.go /HINIT OMIT/,/HEND OMIT/
+
+* JSON
+
+Parsing
+
+.code polls/utils.go /READJSONINIT OMIT/,/READJSONEND OMIT/
+
+* JSON
+
+Serving
+
+.code polls/utils.go /SERVEJSONINIT OMIT/,/SERVEJSONEND OMIT/
+
+* Testing
+
+Utility functions
+
+.code polls/utils.go /TESTSERVERINIT OMIT/,/TESTSERVEREND OMIT/
+
+.code polls/utils.go /TESTHTTPINIT OMIT/,/TESTHTTPEND OMIT/
+
+* Testing
+
+Create a Question
+
+.code polls/server_test.go /CQINIT OMIT/,/CQEND OMIT/
+
+.code polls/model.go /JSONINIT OMIT/,/JSONEND OMIT/
+
+* Testing
+
+Create a Question
+
+.code polls/model.go /INSERINIT OMIT/,/INSERTEND OMIT/
+
+* Testing
+
+Vote!
+
+.code polls/server_test.go /VINIT OMIT/,/VEND OMIT/
+
+.code polls/model.go /UPDATEINIT OMIT/,/UPDATEEND OMIT/
+
+* Testing
+
+Get the question.
+
+.code polls/server_test.go /GINIT OMIT/,/GEND OMIT/
+
+.code polls/model.go /GETINIT OMIT/,/GETEND OMIT/
+
+* Testing
+
+Delete the question
+
+.code polls/server_test.go /DINIT OMIT/,/DEND OMIT/
+
+.code polls/model.go /DELETEINIT OMIT/,/DELETEEND OMIT/
