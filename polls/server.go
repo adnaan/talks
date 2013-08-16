@@ -33,7 +33,6 @@ func (d *Db) GetSession() *mgo.Session {
 		}
 	}
 	return d.MgoSession.Clone()
-
 }
 
 //TYPEEND OMIT

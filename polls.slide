@@ -69,7 +69,7 @@ Create a New Server
 
 .code polls/server.go /NEWINIT OMIT/,/NEWEND OMIT/
 
-*Server
+* Server
 
 Start and Listen
 
