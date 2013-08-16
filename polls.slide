@@ -19,6 +19,12 @@ https://github.com/lokyantra/api
 
 - Today we will create a subset of it.
 
+* Setup
+
+- git clone https://github.com/adnaan/talks.git
+- cd talks/polls
+- go get
+
 * Polls API
 
 - POST /api/q/

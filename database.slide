@@ -9,6 +9,13 @@ http://golang.org/pkg/database/sql/
 https://code.google.com/p/go-wiki/wiki/SQLDrivers
 http://golang.org/src/pkg/database/sql/doc.txt
 
+* Setup
+
+- git clone https://github.com/adnaan/talks.git
+- cd talks/database/redis, go get
+- cd talks/database/mongo, go get
+- cd talks/database/query, go get
+
 * database/sql
 
 - Package sql provides a generic interface around SQL (or SQL-like) databases.
