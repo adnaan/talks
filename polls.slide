@@ -13,6 +13,7 @@ https://github.com/adnaan/talks
 - sudo apt-get install bzr
 - go get (Automatically gets all the dependencies!)
 - go test -v(Test Driven Development!)
+- Test DB: mongodb://gopher:gopher@ds041228.mongolab.com:41228/gotalk
 
 * Polls API
 
@@ -30,28 +31,19 @@ Model
 
 .code polls/model.go /TYPEINIT OMIT/,/TYPEEND OMIT/
 
-* Question
+* POST 
 
-POST /api/q/ > {
+api/q/ 
+
+JSON:
+
+{
     "text": "Which is the best IPL team?",
     "options": [
-        {
-            "option_id": "1",
-            "name": "RCB"
-        },
-        {
-            "option_id": "2",
-            "name": "KKR"
-        },
-        {
-            "option_id": "3",
-            "name": "CSK"
-        },
-        {
-            "option_id": "4",
-            "name": "MI"
-        }
-    ]
+        {"option_id": "1","name": "RCB"},
+        {"option_id": "2", "name": "KKR"},
+        {"option_id": "3","name": "CSK"},
+        {"option_id": "4","name": "MI"} ]
 }
 
 * Server

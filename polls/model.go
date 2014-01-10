@@ -1,4 +1,4 @@
-package lokyantra
+package polls
 
 import (
 	"fmt"
@@ -19,6 +19,7 @@ type Question struct {
 	Text    string        `bson:"text" json:"text"`
 	Options []Option      `bson:"options" json:"options"`
 	Created time.Time     `bson:"created" json:"created"`
+	Updated time.Time     `bson:"updated" json:"updated"`
 }
 
 //TYPEEND OMIT
@@ -35,13 +36,14 @@ func (s *Server) createQuestion(w http.ResponseWriter, r *http.Request) {
 
 	question.Id = bson.NewObjectId()
 	question.Created = time.Now()
+	question.Updated = time.Now()
 	//JSONEND OMIT
 
 	//INSERINIT OMIT
 	//get collection
 	session := s.db.GetSession()
 	defer session.Close()
-	c := session.DB("").C("lokyantra")
+	c := session.DB("").C("polls")
 	//insert
 	if err := c.Insert(question); err != nil {
 
@@ -67,12 +69,15 @@ func (s *Server) updateQuestion(w http.ResponseWriter, r *http.Request) {
 	//get collection
 	session := s.db.GetSession()
 	defer session.Close()
-	c := session.DB("").C("lokyantra")
+	c := session.DB("").C("polls")
 
 	if err := c.Update(bson.M{"_id": bson.ObjectIdHex(question_id), "options.option_id": vote["option"]}, bson.M{"$inc": bson.M{"options.$.vote": 1}}); err != nil {
-		fmt.Printf("error updating%v\n", err)
+		fmt.Printf("error updating vote count%v\n", err)
 	}
 	//UPDATEEND OMIT
+	if err := c.Update(bson.M{"_id": bson.ObjectIdHex(question_id)}, bson.M{"$set": bson.M{"updated": time.Now()}}); err != nil {
+		fmt.Printf("error updating time%v\n", err)
+	}
 
 	question := Question{}
 	if err := c.FindId(bson.ObjectIdHex(question_id)).One(&question); err != nil {
@@ -89,7 +94,7 @@ func (s *Server) getQuestion(w http.ResponseWriter, r *http.Request) {
 	//get collection
 	session := s.db.GetSession()
 	defer session.Close()
-	c := session.DB("").C("lokyantra")
+	c := session.DB("").C("polls")
 
 	//find
 	//GETINIT OMIT
@@ -109,7 +114,7 @@ func (s *Server) deleteQuestion(w http.ResponseWriter, r *http.Request) {
 	//get collection
 	session := s.db.GetSession()
 	defer session.Close()
-	c := session.DB("").C("lokyantra")
+	c := session.DB("").C("polls")
 
 	//DELETEINIT OMIT
 	//delete

@@ -1,4 +1,4 @@
-package lokyantra
+package polls
 
 import (
 	"encoding/json"

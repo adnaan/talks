@@ -1,4 +1,4 @@
-package lokyantra
+package polls
 
 import (
 	"fmt"
@@ -37,8 +37,10 @@ func (d *Db) GetSession() *mgo.Session {
 
 //TYPEEND OMIT
 
-//dbUrl:"mongodb://adnaan:pass@localhost:27017/lokyantra"
+//dbUrl:"mongodb://gopher:gopher@localhost:27017/gotalk"
 //serverUrl:fmt.Sprintf("%s:%d", address, port)
+//test db: mongodb://gopher:gopher@ds041228.mongolab.com:41228/gotalk
+//to create user in mongodb: db.addUser( { user: "gopher",pwd: "gopher",roles: [ "userAdminAnyDatabase" ] } )
 //creates a new server
 //NEWINIT OMIT
 func NewServer() *Server {
@@ -48,7 +50,7 @@ func NewServer() *Server {
 	s := &Server{
 		httpServer: &http.Server{Addr: fmt.Sprintf(":%d", 9947), Handler: r},
 		route:      r,
-		db:         &Db{Url: "mongodb://gopher:gopher@ds041228.mongolab.com:41228/gotalk"},
+		db:         &Db{Url: "mongodb://gopher:gopher@localhost:27017/gotalk"},
 	}
 
 	s.addHandlers()
@@ -84,7 +86,7 @@ func (s *Server) ListenAndServe() error {
 
 	go s.httpServer.Serve(s.listener)
 
-	//fmt.Printf("Lokyantra is now listening on http://localhost%s\n", s.httpServer.Addr)
+	//fmt.Printf("Poll Server is now listening on http://localhost%s\n", s.httpServer.Addr)
 
 	return nil
 }
