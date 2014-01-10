@@ -1,29 +1,18 @@
 Workshop: A REST API Application with MongoDB
-Go Meetup #2 Bangalore 
-17 Aug 2013
+Go Meetup #3 Bangalore 
+11th Jan 2014
 
 Adnaan Badr
 badr.adnaan@gmail.com
 https://github.com/adnaan/talks
-https://github.com/lokyantra/api
 
-* Lokyantra
-
-- An API for democracy. Happy Independence Day!
-
-- First feature is to implement a polls api.
-
-- Create question with options. Vote on question/option with REST API.
-
-- It's a work in progress. Has MIT License. Contributions and Ideas are welcome.
-
-- Today we will create a subset of it.
-
-* Setup
-
+* Setup and Execution
+- sudo apt-get install git
 - git clone https://github.com/adnaan/talks.git
 - cd talks/polls
-- go get
+- sudo apt-get install bzr
+- go get (Automatically gets all the dependencies!)
+- go test -v(Test Driven Development!)
 
 * Polls API
 
