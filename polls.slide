@@ -13,7 +13,7 @@ https://github.com/adnaan/talks
 - https://code.google.com/p/go/downloads/list
 - export GOROOT=$HOME/go
 - export PATH=$PATH:$GOROOT/bin
-- export GOPATH=$HOME/nuts{or your workspace name, but you don't go nuts anymore :)}
+- export GOPATH=$HOME/nuts{Or your workspace name.But hey, go nuts :)}
 - export PATH=$PATH:$GOPATH/bin
 - sudo apt-get install git
 - sudo apt-get install bzr
