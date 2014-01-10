@@ -29,7 +29,7 @@ func (d *Db) GetSession() *mgo.Session {
 		var err error
 		d.MgoSession, err = mgo.Dial(d.Url)
 		if err != nil {
-			panic(err) // no, not really
+			panic(err)
 		}
 	}
 	return d.MgoSession.Clone()

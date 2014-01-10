@@ -1,18 +1,30 @@
-Workshop: A REST API Application with MongoDB
-Go Meetup #3 Bangalore 
+Workshop
+A REST API App with MongoDB
+
+Go Meetup #3, Bangalore
+
 11 Jan 2014
 
 Adnaan Badr
 badr.adnaan@gmail.com
 https://github.com/adnaan/talks
 
-* Setup and Execution
+* Setup
+- https://code.google.com/p/go/downloads/list
+- export GOROOT=$HOME/go
+- export PATH=$PATH:$GOROOT/bin
+- export GOPATH=$HOME/nuts{or your workspace name, but you don't go nuts anymore :)}
+- export PATH=$PATH:$GOPATH/bin
 - sudo apt-get install git
 - sudo apt-get install bzr
+
+* Setup
+- mkdir -p nuts/src/github.com/adnaan
+- cd nuts/src/github.com/adnaan/
 - git clone https://github.com/adnaan/talks.git
 - cd talks/polls
 - go get (Automatically gets all the dependencies!)
-- go test -v(Test Driven Development!)
+- go test -v (Test Driven Development!)
 - Test DB: mongodb://gopher:gopher@ds041228.mongolab.com:41228/gotalk
 
 * Polls API
@@ -25,13 +37,13 @@ https://github.com/adnaan/talks
 
 - DELETE /api/q/:id
 
-* Question
+* A Question
 
 Model
 
 .code polls/model.go /TYPEINIT OMIT/,/TYPEEND OMIT/
 
-* POST 
+* A Question 
 
 api/q/ 
 
