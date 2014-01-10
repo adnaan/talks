@@ -8,9 +8,9 @@ https://github.com/adnaan/talks
 
 * Setup and Execution
 - sudo apt-get install git
+- sudo apt-get install bzr
 - git clone https://github.com/adnaan/talks.git
 - cd talks/polls
-- sudo apt-get install bzr
 - go get (Automatically gets all the dependencies!)
 - go test -v(Test Driven Development!)
 - Test DB: mongodb://gopher:gopher@ds041228.mongolab.com:41228/gotalk
