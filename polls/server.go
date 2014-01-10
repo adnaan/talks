@@ -84,7 +84,7 @@ func (s *Server) ListenAndServe() error {
 
 	go s.httpServer.Serve(s.listener)
 
-	//fmt.Printf("lokyantra is now listening on http://localhost%s\n", s.httpServer.Addr)
+	//fmt.Printf("Lokyantra is now listening on http://localhost%s\n", s.httpServer.Addr)
 
 	return nil
 }
