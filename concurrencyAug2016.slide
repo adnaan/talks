@@ -1,0 +1,287 @@
+Dive into Concurrency
+12 Aug 2016
+
+Adnaan Badr
+badr.adnaan@gmail.com
+https://github.com/adnaan/talks
+
+References:
+
+http://talks.golang.org/2012/concurrency.slide
+https://blog.golang.org/pipelines
+http://www.slideshare.net/jgrahamc/go-oncurrency
+https://blog.golang.org/advanced-go-concurrency-patterns
+https://blog.cloudflare.com/recycling-memory-buffers-in-go/
+
+* Concurrency in Go
+- Concurrent execution(goroutines)
+- Synchronize and Message(channels)
+- Multi-Way concurrency control(select)
+
+* Concurrency Vs Parallelism
+
+Concurrency is not Parallelism!!
+
+- *Concurrency*: Programming as the composition of independently executing processes.
+
+- *Parallelism*: Programming as the simultaneous execution of (possibly related) computations.
+
+* Goroutines
+
+Goroutines are independently executing functions in the same address space.
+
+.play concurrency/gopher.go
+
+* Making it work
+
+Do something in *main* goroutine to stop it from dying before *func* *gopher* executes
+
+.play concurrency/gopher1.go /START OMIT/,/END OMIT/
+
+* Synchronization
+
+As we saw *func* *main* didn't know what *func* *gopher* was doing.
+
+If it did, it would have not exited before letting *func* *gopher* finish it's work.
+
+Talk about communication problems!
+
+- Statement: If they can communicate, they can synchronize.
+
+* Channels
+
+Channels to the rescue! They are a way to provide communication between two goroutines.
+
+.code concurrency/channels.go /INIT OMIT/,/ENDINIT OMIT/
+
+.code concurrency/channels.go /SEND OMIT/,/ENDSEND OMIT/
+
+.code concurrency/channels.go /REC OMIT/,/ENDREC OMIT/
+
+* Channels and Goroutines
+
+Add a channel to the mix!
+
+.code concurrency/gopher2.go /GOPHER OMIT/,/ENDGOPHER OMIT/
+
+.play concurrency/gopher2.go /MAIN OMIT/,/ENDMAIN OMIT/
+
+* Takeaways
+
+A channel blocks until both sender(c<-) and receiver(<-c) are ready to do their jobs.
+
+"Block" means no communication takes place through the channel. In *func* *main* the execution of next program instruction is dependant on the receiving of a channel message: fmt.Printf("Gopher says: %q\n", <-c) , only executes if a message is received(or it wait's indefinitely).
+
+Hence, the sending and receving of messages also synchronizes *func* *main* and *func* *gopher*
+
+* Let's play some more!
+
+We sent a channel to *func* *gopher* for communication. How about getting back a channel from it?
+
+.code concurrency/gopher3.go /GOPHER OMIT/,/ENDGOPHER OMIT/
+
+* Let's play some more!
+
+.play concurrency/gopher3.go /MAIN OMIT/,/ENDMAIN OMIT/
+
+* Same function, Many instances == Services!!
+
+.code concurrency/gopher4.go /GOPHER OMIT/,/ENDGOPHER OMIT/
+
+.play concurrency/gopher4.go /MAIN OMIT/,/ENDMAIN OMIT/
+
+* Whoever talks first!
+
+The *gopher* instances are executing one after the other. Let's print whoever responds first. We need a mulitplexer.
+
+.code concurrency/gopher5.go /FIRST OMIT/,/ENDFIRST OMIT/
+
+* Whoever talks first!
+
+Now the gopher instance who responds first will print
+
+.code concurrency/gopher5.go /GOPHER OMIT/,/ENDGOPHER OMIT/
+
+.play concurrency/gopher5.go /MAIN OMIT/,/ENDMAIN OMIT/
+
+* Restore order
+
+The messages are not in sequence. Let's bring back the order! Instead of a string we pass a struct message.
+
+.code concurrency/gopher6.go /MSG OMIT/,/ENDMSG OMIT/
+
+*Message* contains the string message and a wait channel which is a signal for
+*gopher* to reply or not.
+
+.code concurrency/gopher6.go /FIRST OMIT/,/ENDFIRST OMIT/
+
+* Restore order
+
+We send *true* on wait channel of the message to indicate that the relevant gopher should reply.
+
+.play concurrency/gopher6.go /MAIN OMIT/,/ENDMAIN OMIT/
+
+* Buffered channels
+
+Sends to a buffered channel block only when the buffer is full. Receives block when the buffer is empty.
+
+.play concurrencyAug2016/buffered_channels.go /START OMIT/,/END OMIT/
+
+* Concurrency Toys!
+
+- UUID Service
+- Rate limiter
+- Load Balancer
+- Memory Recycler
+- Simple Pipeline
+- A MD5 checksum Pipeline
+
+* UUID Service
+
+Get a unique id by simply reading from a channel.
+
+.play concurrencyAug2016/uuid.go /START OMIT/,/END OMIT/
+
+* Rate limiter
+
+Requests every 200ms.
+
+.code concurrencyAug2016/rate_limiter.go /START1 OMIT/,/END1 OMIT/
+
+* Rate limiter
+
+First 3 requests in an immediate burst. Last 3 every second.
+
+.play concurrencyAug2016/rate_limiter.go /START2 OMIT/,/END2 OMIT/
+
+* Memory Recycler 1
+
+Create a pool of buffers emulating incoming network requests
+
+.code concurrencyAug2016/memory_recycler.go /START1 OMIT/,/END1 OMIT/
+
+* Memory Recycler 1
+
+.play concurrencyAug2016/memory_recycler.go /START2 OMIT/,/END2 OMIT/
+
+* Memory Recycler 2
+
+Using a buffered channel to get buffers from a pool.
+
+.code concurrencyAug2016/memory_recycler_channel.go /START1 OMIT/,/END1 OMIT/
+
+* Memory Recycler 2
+
+.code concurrencyAug2016/memory_recycler_channel.go /START2 OMIT/,/END2 OMIT/
+
+* Memory Recycler 2
+
+.play concurrencyAug2016/memory_recycler_channel.go /START3 OMIT/,/END3 OMIT/
+
+* Memory Recycler 3
+
+Create a memory recycler function
+
+.code concurrencyAug2016/memory_recycler_func.go /START1 OMIT/,/END1 OMIT/
+
+* Memory Recycler 3
+
+.code concurrencyAug2016/memory_recycler_func.go /START2 OMIT/,/END2 OMIT/
+
+* Memory Recycler 3
+
+.code concurrencyAug2016/memory_recycler_func.go /START3 OMIT/,/END3 OMIT/
+
+* Memory Recycler 3
+
+.code concurrencyAug2016/memory_recycler_func.go /START4 OMIT/,/END4 OMIT/
+
+* Memory Recycler 3
+
+.code concurrencyAug2016/memory_recycler_func.go /START5 OMIT/,/END5 OMIT/
+
+* Memory Recycler 3
+
+.play concurrencyAug2016/memory_recycler_func.go /START6 OMIT/,/END6 OMIT/
+
+* A Simple Pipeline
+
+Stages of work sent downstream.
+
+.code concurrencyAug2016/pipelines.go /START1 OMIT/,/END1 OMIT/
+
+* A Simple Pipeline
+
+.code concurrencyAug2016/pipelines.go /START2 OMIT/,/END2 OMIT/
+
+* A Simple Pipeline
+
+.play concurrencyAug2016/pipelines.go /START3 OMIT/,/END3 OMIT/
+
+* A Distributed Pipeline
+
+Each stage on a separate goroutine and merge the outputs.
+
+.code concurrencyAug2016/pipelines_merge.go /START1 OMIT/,/END1 OMIT/
+
+* A Distributed Pipeline
+
+.code concurrencyAug2016/pipelines_merge.go /START2 OMIT/,/END2 OMIT/
+
+* A Distributed Pipeline
+
+.play concurrencyAug2016/pipelines_merge.go /START3 OMIT/,/END3 OMIT/
+
+* A MD5 checksum pipeline
+
+A single staged serial pipeline
+
+.play concurrencyAug2016/md5_serial.go /START1 OMIT/,/END1 OMIT/
+
+* A single staged serial pipeline
+
+.play concurrencyAug2016/md5_bounded.go /START2 OMIT/,/END2 OMIT/
+
+* Three staged parallel pipeline
+
+Walk, digest and send result
+
+.code concurrencyAug2016/md5_bounded.go /START1 OMIT/,/END1 OMIT/
+
+* ...
+
+.code concurrencyAug2016/md5_bounded.go /START2 OMIT/,/END2 OMIT/
+
+* ...
+
+.code concurrencyAug2016/md5_bounded.go /START3 OMIT/,/END3 OMIT/
+
+* ...
+
+.code concurrencyAug2016/md5_bounded.go /START4 OMIT/,/END4 OMIT/
+
+* ...
+
+.code concurrencyAug2016/md5_bounded.go /START5 OMIT/,/END5 OMIT/
+
+* ...
+
+.code concurrencyAug2016/md5_bounded.go /START6 OMIT/,/END6 OMIT/
+
+* ...
+
+.code concurrencyAug2016/md5_bounded.go /START7 OMIT/,/END7 OMIT/
+
+* ...
+
+.play concurrencyAug2016/md5_bounded.go /START8 OMIT/,/END8 OMIT/
+
+* Conclusion
+
+- Concurrency in Go is simple.
+
+- Share memory by communicating.
+
+- Do not communicate by sharing memory.
+
+- Have fun!
