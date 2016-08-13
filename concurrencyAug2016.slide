@@ -1,5 +1,6 @@
-Dive into Concurrency
-12 Aug 2016
+Deep Dive into Concurrency
+Golang Bangalore Meetup XIV
+13 Aug 2016
 
 Adnaan Badr
 badr.adnaan@gmail.com
@@ -12,6 +13,7 @@ https://blog.golang.org/pipelines
 http://www.slideshare.net/jgrahamc/go-oncurrency
 https://blog.golang.org/advanced-go-concurrency-patterns
 https://blog.cloudflare.com/recycling-memory-buffers-in-go/
+https://godoc.org/golang.org/x/sync/errgroup
 
 * Concurrency in Go
 - Concurrent execution(goroutines)
@@ -96,7 +98,7 @@ The *gopher* instances are executing one after the other. Let's print whoever re
 
 .code concurrency/gopher5.go /FIRST OMIT/,/ENDFIRST OMIT/
 
-* Whoever talks first!
+* Whomever talks first!
 
 Now the gopher instance who responds first will print
 
@@ -106,18 +108,12 @@ Now the gopher instance who responds first will print
 
 * Restore order
 
-The messages are not in sequence. Let's bring back the order! Instead of a string we pass a struct message.
-
 .code concurrency/gopher6.go /MSG OMIT/,/ENDMSG OMIT/
-
-*Message* contains the string message and a wait channel which is a signal for
-*gopher* to reply or not.
 
 .code concurrency/gopher6.go /FIRST OMIT/,/ENDFIRST OMIT/
 
-* Restore order
-
-We send *true* on wait channel of the message to indicate that the relevant gopher should reply.
+* ...
+.code concurrency/gopher6.go /GOPHER OMIT/,/ENDGOPHER OMIT/
 
 .play concurrency/gopher6.go /MAIN OMIT/,/ENDMAIN OMIT/
 
@@ -276,12 +272,32 @@ Walk, digest and send result
 
 .play concurrencyAug2016/md5_bounded.go /START8 OMIT/,/END8 OMIT/
 
-* Conclusion
+* Context and Errgroup
 
-- Concurrency in Go is simple.
+Package errgroup provides synchronization, error propagation, and Context cancelation for groups of goroutines working on subtasks of a common task.
 
-- Share memory by communicating.
+Package context defines the Context type, which carries deadlines, cancelation signals, and other request-scoped values across API boundaries and between processes.
 
-- Do not communicate by sharing memory.
+type Group
 
-- Have fun!
+- func WithContext(ctx context.Context) (*Group, context.Context)
+
+- func (g *Group) Go(f func() error)
+
+- func (g *Group) Wait() error
+
+* ...
+
+.code concurrencyAug2016/md5_errgroup.go /START1 OMIT/,/END1 OMIT/
+
+* ...
+
+.code concurrencyAug2016/md5_errgroup.go /START2 OMIT/,/END2 OMIT/
+
+* ...
+
+.code concurrencyAug2016/md5_errgroup.go /START3 OMIT/,/END3 OMIT/
+
+* ...
+
+.code concurrencyAug2016/md5_errgroup.go /START4 OMIT/,/END4 OMIT/

@@ -6,19 +6,27 @@ import (
 	"time"
 )
 
-// MSG OMIT
+//MSG OMIT
 type Message struct {
 	str  string
 	wait chan bool
 }
 
-// ENDMSG OMIT
+//ENDMSG OMIT
 
 //FIRST OMIT
 func first(input1, input2 <-chan Message) <-chan Message {
 	c := make(chan Message)
-	go func() {for {c <- <-input1}}()
-	go func() {for {c <- <-input2}}() 
+	go func() {
+		for {
+			c <- <-input1
+		}
+	}()
+	go func() {
+		for {
+			c <- <-input2
+		}
+	}()
 	return c //the value sent to c is either <-input1 or <-input2 depending upon who receives first
 }
 
