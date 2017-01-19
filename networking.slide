@@ -75,7 +75,10 @@ A Simple Webserver Tutorial: https://github.com/adnaan/learngo
 
 * html/template
 
-.code networking/mywebsite.html /S1 OMIT/,/S2 OMIT/
+    <head> 
+    <title> {{ .Title }} </title>
+    </head>
+    <h1> {{ .Heading }} </h1>
 
 * html/template
 

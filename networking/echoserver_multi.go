@@ -13,7 +13,7 @@ import (
 func main() {
 
 	service := ":1201"
-	tcpAddr, err := net.ResolveTCPAddr("ip4", service)
+	tcpAddr, err := net.ResolveTCPAddr("tcp4", service)
 	checkError(err)
 
 	listener, err := net.ListenTCP("tcp", tcpAddr)
