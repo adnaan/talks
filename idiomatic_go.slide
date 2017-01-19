@@ -1,0 +1,350 @@
+Idiomatic Go
+19 Jan 2017
+Myntra
+
+Adnaan Badr
+badr.adnaan@gmail.com
+https://github.com/adnaan/talks
+https://golang.org/doc/effective_go.html
+https://dmitri.shuralyov.com/idiomatic-go
+
+* Programming Idiom 
+
+    A programming idiom is a means of expressing a recurring construct in one
+    or more programming languages
+.link https://en.wikipedia.org/wiki/Programming_idiom source
+
+
+* Let's look at Go Idioms On : 
+
+- Formatting
+
+- Comments
+
+- Names
+
+- Semicolons
+
+- Control Structures
+
+- Functions
+
+- Data
+
+* Let's look at Go Idioms On : 
+
+- Methods
+
+- Interfaces
+
+- Blank Identifier
+
+- Unused Imports and Variables
+
+- Embedding/Composition
+
+- Errors
+
+- Panic and Recover
+
+* Formatting
+
+Don't worry about formatting, Go has the builtin formatting enforcer: `gofmt`
+
+It's baked into IDE plugins for sublimetext, vscode, intellij, vim etc.
+
+* Comments
+
+Do this:
+
+    // This is a comment
+    // for humans.
+Don't do this:
+
+    //This is a comment
+    //for humans.
+For consistency, and because the no space style is reserved for comment pragmas, for example:
+
+    //go:generate go run gen.go
+
+.link https://golang.org/cmd/compile/#hdr-Compiler_Directives  Compiler Directives
+
+
+* Names
+
+- Package name should be short, consice, without underscores or mixedCaps: `bytes.Buffer`
+
+- Getters: Don't prefix *Get* infront a getter, doing so for set is fine though.
+
+- Use an -er suffix: Reader, Writer, Formatter, CloseNotifier etc.
+
+- The convention in Go is to use MixedCaps or mixedCaps rather than underscores to write multiword names.
+
+* Semicolons
+
+- No semicolons for line termination, But: 
+
+    if i < f() { // correct
+        g()
+    }
+
+You can't do this: 
+
+        if i < f()  // wrong!
+        {           // wrong!
+            g()
+        }
+
+
+* Control Structures
+
+- IF
+    if x > 0 { // mandatory
+        return y
+    }else{
+        return x
+    }
+
+- For
+    for i := 0; i < 10; i++ {
+        sum += i
+    }
+
+    // Like a C for
+    for init; condition; post { }
+
+    // Like a C while
+    for condition { }
+
+    // Like a C for(;;)
+    for { }
+
+
+* Control Structures
+
+- Switch
+
+    func shouldEscape(c byte) bool {
+        switch c {
+        case ' ', '?', '&', '=', '#', '+', '%':
+            return true
+        }
+        return false
+    }
+
+* Control Structures
+
+- Type Switch
+
+    var t interface{}
+        t = functionOfSomeType()
+        switch t := t.(type) {
+        default:
+            fmt.Printf("unexpected type %T\n", t)     // %T prints whatever type t has
+        case bool:
+            fmt.Printf("boolean %t\n", t)             // t has type bool
+        case int:
+            fmt.Printf("integer %d\n", t)             // t has type int
+        case *bool:
+            fmt.Printf("pointer to boolean %t\n", *t) // t has type *bool
+        case *int:
+            fmt.Printf("pointer to integer %d\n", *t) // t has type *int
+    }
+
+* Functions
+
+- Multiple Return Values: 
+    func (file *File) Write(b []byte) (n int, err error)
+
+- Defer. Executed in LIFO order.
+    func trace(s string)   { fmt.Println("entering:", s) }
+    func untrace(s string) { fmt.Println("leaving:", s) }
+
+    // Use them like this:
+    func a() {
+        trace("a")
+        defer untrace("a")
+        // do something....
+    }
+
+* Data 
+
+- Allocation primitive: new.
+    new(T) allocates zeroed storage for a new item of type T 
+    and returns its address, a value of type *T
+
+    p := new(SyncedBuffer)  // type *SyncedBuffer
+    var v SyncedBuffer      // type  SyncedBuffer
+
+- Allocation primitive: make
+    It creates slices, maps, and channels only, and it returns 
+    an initialized (not zeroed) value of type T (not *T).
+
+    make([]int, 10, 100)
+
+* Data 
+
+Difference between new and make
+
+    var p *[]int = new([]int)       // allocates slice structure; *p == nil; rarely useful
+    var v  []int = make([]int, 100) // the slice v now refers to a new array of 100 ints
+
+    // Unnecessarily complex:
+    var p *[]int = new([]int)
+    *p = make([]int, 100, 100)
+
+    // Idiomatic:
+    v := make([]int, 100)
+
+
+* Methods
+
+Pointers vs. Values
+
+    type ByteSlice []byte
+    func (slice ByteSlice) Append(data []byte) []byte {
+    }
+
+The above still requires the method to return the value.
+
+    func (p *ByteSlice) Append(data []byte) {
+        slice := *p
+        // Body as above, without the return.
+        *p = slice
+    }
+
+* Interfaces 
+
+Empty Interfaces
+
+    type Stringer interface {
+        String() string
+    }
+
+    var value interface{} // Value provided by caller.
+    switch str := value.(type) {
+        case string:
+            return str
+        case Stringer:
+            return str.String()
+    }
+
+* Blank Identifier
+
+    if _, err := os.Stat(path); os.IsNotExist(err) {
+        fmt.Printf("%s does not exist\n", path)
+    }
+
+* Unused Imports and Variables
+
+    package main
+
+    import (
+        "fmt"
+        "io"
+        "log"
+        "os"
+    )
+
+    func main() {
+        fd, err := os.Open("test.go")
+        if err != nil {
+            log.Fatal(err)
+        }
+        // TODO: use fd.
+    }
+
+* Unused Imports and Variables
+
+    package main
+
+    import (
+        "fmt"
+        "io"
+        "log"
+        "os"
+    )
+
+    var _ = fmt.Printf // For debugging; delete when done.
+    var _ io.Reader    // For debugging; delete when done.
+
+    func main() {
+        fd, err := os.Open("test.go")
+        if err != nil {
+            log.Fatal(err)
+        }
+        // TODO: use fd.
+        _ = fd
+    }
+
+* Unused Imports and Variables
+
+Import for side effect
+
+    import _ "net/http/pprof"
+
+
+* Embedding/Composition
+
+    type Job struct {
+        Command string
+        *log.Logger
+    }
+
+The Job type now has the Log, Logf and other methods of *log.Logger
+
+    job.Log("starting now...")
+
+* Errors
+
+Builtin interface 
+
+    type error interface {
+        Error() string
+    }
+
+Custom Error
+
+    // PathError records an error and the operation and
+    // file path that caused it.
+    type PathError struct {
+        Op string    // "open", "unlink", etc.
+        Path string  // The associated file.
+        Err error    // Returned by the system call.
+    }
+
+    func (e *PathError) Error() string {
+        return e.Op + " " + e.Path + ": " + e.Err.Error()
+    }
+
+* Panic 
+
+Creates a runtime error and stops the program 
+
+    var user = os.Getenv("USER")
+
+    func init() {
+        if user == "" {
+            panic("no value for $USER")
+        }
+    }
+
+
+* Recover 
+
+Recover from a panic
+
+    func server(workChan <-chan *Work) {
+        for work := range workChan {
+            go safelyDo(work)
+        }
+    }
+
+    func safelyDo(work *Work) {
+        defer func() {
+            if err := recover(); err != nil {
+                log.Println("work failed:", err)
+            }
+        }()
+        do(work)
+    }

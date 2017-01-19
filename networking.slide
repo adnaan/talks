@@ -1,0 +1,162 @@
+Networking in Go
+19 Jan 2017
+Myntra
+
+Adnaan Badr
+badr.adnaan@gmail.com
+https://github.com/adnaan/talks
+Reference: https://jannewmarch.gitbooks.io/network-programming-with-go-golang-/content/
+A Simple Webserver Tutorial: https://github.com/adnaan/learngo
+
+* Servers
+
+- TCP Server 
+
+- RPC Server/Client
+
+- HTTP Server
+
+
+* TCP Server
+
+.code networking/daytime.go /S1 OMIT/,/E1 OMIT/
+
+* TCP Server
+
+.play networking/daytime.go /S2 OMIT/,/E2 OMIT/
+
+* RPC Server
+
+.code networking/rpcserver.go /S1 OMIT/,/S2 OMIT/
+
+* RPC Server
+
+.play networking/rpcserver.go /S2 OMIT/,/S3 OMIT/
+
+* RPC Client
+
+.code networking/rpcclient.go /S1 OMIT/,/S2 OMIT/
+
+* RPC Client
+
+.play networking/rpcclient.go /S2 OMIT/,/S3 OMIT/
+
+* HTTP Server 
+
+.play networking/httpserver.go /S1 OMIT/,/S2 OMIT/
+
+* Over the wire(encoding)
+
+- encoding/json
+
+- encoding/xml
+
+* encoding/json
+
+.play networking/json_unmarshal.go /S1 OMIT/,/S2 OMIT/
+
+* encoding/xml
+
+.code networking/xml_unmarshal.go /S1 OMIT/,/S2 OMIT/
+
+* encoding/xml
+
+.code networking/xml_unmarshal.go /S2 OMIT/,/S3 OMIT/
+
+* encoding/xml
+
+.play networking/xml_unmarshal.go /S3 OMIT/,/S4 OMIT/
+
+* Templates
+
+- html/template
+
+- text/template 
+
+* html/template
+
+.code networking/mywebsite.html /S1 OMIT/,/S2 OMIT/
+
+* html/template
+
+.play networking/html_template.go /S1 OMIT/,/S2 OMIT/
+
+* text/template
+
+.code networking/text_template.go /S1 OMIT/,/S2 OMIT/
+
+* text/template
+
+.play networking/text_template.go /S2 OMIT/,/S3 OMIT/
+
+* Websockets
+
+.play networking/websocket.go /S1 OMIT/,/S2 OMIT/
+
+* Client
+
+.play networking/http_get.go /S1 OMIT/,/S2 OMIT/
+
+* Socket-level Programming
+
+- Resolve IP
+
+- Lookup Port
+
+- TCP Client
+
+- Multithreaded TCP Server
+
+* Resolve IP 
+
+.play networking/resolve_ip.go /S1 OMIT/,/S2 OMIT/
+
+* Lookup Port
+
+.play networking/lookup_port.go /S1 OMIT/,/S2 OMIT/
+
+* TCP Client
+
+.code networking/getheadinfo.go /S1 OMIT/,/S2 OMIT/
+
+* TCP Client
+
+.play networking/getheadinfo.go /S2 OMIT/,/S3 OMIT/
+
+* Multithreaded TCP Server
+
+- Single Connection
+- Multiple Connections
+
+* Single Connection
+
+.code networking/echoserver.go /S1 OMIT/,/S2 OMIT/
+
+* Single Connection
+
+.code networking/echoserver.go /S2 OMIT/,/S3 OMIT/
+
+* Single Connection
+
+.play networking/echoserver.go /S3 OMIT/,/S4 OMIT/
+
+* Multiple Connections
+
+.code networking/echoserver_multi.go /S1 OMIT/,/S2 OMIT/
+
+* Multiple Connections
+
+.code networking/echoserver_multi.go /S2 OMIT/,/S3 OMIT/
+
+* Multiple Connections
+
+.play networking/echoserver_multi.go /S3 OMIT/,/S4 OMIT/
+
+
+
+
+
+
+
+
+
