@@ -4,6 +4,10 @@ talks
 Slides
 ======
 
+[Idiomatic Go](http://talks.godoc.org/github.com/adnaan/talks/idiomatic_go.slide)
+
+[Networking](http://talks.godoc.org/github.com/adnaan/talks/networking.slide)
+
 [Dive into Concurrency](http://talks.godoc.org/github.com/adnaan/talks/concurrencyAug2016.slide)
 
 [Concurrency](http://talks.godoc.org/github.com/adnaan/talks/concurrency.slide)
