@@ -3,6 +3,7 @@ talks
 
 Slides
 ======
+[Dependency Injection](http://talks.godoc.org/github.com/adnaan/talks/dependency_injection.slide)
 
 [Idiomatic Go](http://talks.godoc.org/github.com/adnaan/talks/idiomatic_go.slide)
 

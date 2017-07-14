@@ -1,0 +1,240 @@
+Exploring Dependency Injection in Go
+Go Bangalore Meetup XXIV
+15 Jul 2017
+
+Adnaan Badr
+Technical Lead, Systems Engineering, Myntra
+badr.adnaan@gmail.com
+https://github.com/adnaan/talks
+http://adnaan.badr.in/
+
+* Introduction
+
+Dependency Injection is quite popular in many languages. 
+
+We will only talk about it's design and side-effects w.r.t Go. But for sake of setting up a context, let's define it simply: 
+
+    A dependency is passed to an object as an argument rather than the object creating or finding it.
+
+* Experience Report
+
+- Used dependency injection in a major project powering the storefront at Myntra recently. 
+
+- Multiple services in Go: 5+. All talking to each other. 
+
+- Started off as a single code base, single service.
+
+- Implemented dependency injection after code became quite complex. 
+
+- We also realised, that we need multiple services instead of one after all. (actually we always needed multiple, but didn't implement it from the beginning due to shortage of time.)
+
+- After refractor: single code base, multiple services.
+
+- It is beautiful.
+
+* Dependency Injection
+
+    // Using a global dependency in PostService
+
+    var userService user.Service
+
+    func Init() {
+    userService = user.NewService()
+    }
+
+    func GetComments() []Comment {
+    var comments []Comment
+    comments = append(comments, userService.GetComments())
+    return comments
+    }
+
+* Dependency Injection
+
+    // Using dependency injection
+
+    type PostService struct {
+        UserService user.Service
+    }
+
+    func (p *PostService) GetComments() []Comment {
+        var comments []Comment
+        comments = append(comments, p.UserService.GetComments())
+        return comments
+    }
+
+    func main(){
+    postService := &PostService{UserService:user.NewService()
+    ...
+    }
+
+* Design Goals
+
+- No Global State: No package level variables, no package level func init. 
+Reference: 
+.link https://peter.bourgon.org/blog/2017/06/09/theory-of-modern-go.html theory of modern go
+- Support Multi-Mode Services: Configure a service to enable/disable capabilities.
+- Better Testability: Easy testing/mocking.
+- Better Refractor-ability: Design for code refractors. 
+- Better Readability: Explicit and readable dependency graph.
+
+* Pitfalls with struct initializations
+
+    func main(){
+        asClient := aerospike.NewClient(...)
+        kafkaProducer := sarama.NewAsyncProducer(...)
+        authService := auth.Service{Key: "xxx",Host: "jjj"}
+        ... // more services
+        userService := user.Service{AsClient : asClient,KafkaProducer: kafkaProducer,
+            AuthService: authService
+            ... // more dependencies
+        } 
+        authService2 := auth.Service {
+            Key: "yyy",Host: "kkk"
+        }
+        userServiceLimitedAccess := user.Service{AsClient : asClient,KafkaProducer: kafkaProducer,
+            AuthService: authService2
+            ... // less dependencies
+        }
+    }
+
+* Pitfalls with struct initializations
+
+- Complex initialization code. 
+
+- Reduces readability and requires prior implicit knowledge of the dependencies of a service.
+
+- Not scalable with changing requirements.
+
+- Service usability and behavior could change based on:
+
+    - The service has multiple modes or capabilities. e.g: `limitedaccess`, `maintenance` , `readonly` etc. 
+    - The service has a commonly used `default` mode.
+    - The service adds/removes dependencies over time(i.e capabilities). 
+
+
+* Use Interfaces
+
+- Allows multi-mode services. 
+
+- Clients don't need to change the dependency contract.
+
+    type AppHandler struct {
+        UserService user.Service
+        // ... more services.
+    }
+
+Here, `AppHandler` will accept any service(mode) which satisfies the `user.Service` interface.
+
+* Prefer construction over initialization
+
+Apart from the points discussed before, initialization also limits our ability to enable/disable and extend service capabilities. 
+
+Would recommend constructor functions over struct initializers to eliminate these problems.
+
+- Possible approaches to construct a service object using functions:
+
+    - New. e.g: NewReadOnlyService(...), NewPrivilegedService(...)
+    - Config : type Config struct{}.... NewService(c *Config). NewService(nil). nil would mean 
+      a default Config
+    - Variadic Config. NewService(c ...Config).
+    - Functional Options: NewService(options ...func(Service)
+
+Reference:
+.link https://dave.cheney.net/2014/10/17/functional-options-for-friendly-apis 
+
+* Functional Options
+
+The functional options pattern is nice, but it is afflicted by the same problems as initialization if options are dependencies.
+
+    // using the functional option pattern
+    myUserService := user.NewService(
+    msession *mgo.Session,
+    ..., // more default dependencies
+    user.PrivilegedMode(redisPool *redis.Pool),
+    ..., // more modes
+    )
+    
+    // or 
+    
+    myUserService := user.NewService(
+    user.DefaultMode(msession,...,),// more default dependencies
+    user.PrivilegedMode(redisPool),
+    ..., // more modes
+    )
+
+- Ideally, for a service we would want a `default` behavior which we can override to create a new mode.
+
+* Functional Config Options
+
+Instead we use a combo of  `functional` `options` and  `Config` patterns.
+
+    // NewService configures the service
+    func NewService(defaultConfig Config, configOptions ...func(*Config)) Service {
+        for _, option := range configOptions {
+            option(&defaultConfig)
+        }
+        return &service{c: &defaultConfig}
+    }
+
+- Pass `Config` by value. Additional attributes/overrides to the `defaultConfig` is done via `configOptions`.
+
+* Example(user/user.go)
+
+.code dependency_injection_july2017/user/user.go /S1/,/S2/
+
+* Example(user/user.go) contd.
+
+.code dependency_injection_july2017/user/user.go /S2/,/S3/
+
+* Example(user/user.go) contd.
+
+.code dependency_injection_july2017/user/user.go /S3/,/S4/
+
+* Example(main.go)
+
+.code dependency_injection_july2017/main.go /S1/,/S2/
+
+* Testing/Mocking
+
+Writing a mock implementation for the service comes naturally now.
+
+.code dependency_injection_july2017/user/mock/user.go /S1/,/S2/
+
+* Refactoring Code
+
+A sorted out dependency graph makes splitting our code into new services trivial.
+
+    //service1/main.go
+    msession := &mgo.Session{} //dummy
+    defaultConfig := user.Config{Msession: msession}
+    redisPool := &redis.Pool{} //dummy
+    myUserService := user.NewService(defaultConfig)
+    appHandler := &AppHandler{UserService: myUserService}
+
+    ...
+
+    //service2/main.go
+    msession := &mgo.Session{} //dummy
+    defaultConfig := user.Config{Msession: msession}
+    redisPool := &redis.Pool{} //dummy
+    myPrivilegedUserService := user.NewService(defaultConfig, user.PrivilegedMode(redisPool))
+    appHandler := &AppHandler{UserService: myPrivilegedUserService}
+    ...
+
+
+
+* Dependency Graph Builders
+
+.link https://github.com/facebookgo/inject facebookgo/inject
+
+.link https://github.com/codegangsta/inject codegangsta/inject
+
+Unfortunately, I haven't had a chance to try them yet. Reserving opinion for now.
+
+* Takeaway
+
+    Pass dependencies to a service implementation as functional config options:
+
+        New(defaultConfig Config, configOptions ...func(*Config))Service.
+
+    where Service is an interface.
